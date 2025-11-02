@@ -122,13 +122,13 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        /* Vermelho para GANHEI */
-        .card-receita {
-            background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+        .card-ganhei {
+            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+            color: #333;
         }
 
-        .card-despesa {
-            background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+        .card-gastei {
+            background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
         }
 
         .card-saldo-positivo {
@@ -265,11 +265,11 @@
         }
 
         .transaction-item.receita {
-            border-left-color: #F44336;
+            border-left-color: #FFC107;
         }
 
         .transaction-item.despesa {
-            border-left-color: #FFC107;
+            border-left-color: #F44336;
         }
 
         .transaction-info {
@@ -292,12 +292,12 @@
         }
 
         .transaction-badge.receita {
-            background: #F44336;
+            background: #FFC107;
+            color: #333;
         }
 
         .transaction-badge.despesa {
-            background: #FFC107;
-            color: #333;
+            background: #F44336;
         }
 
         .transaction-details h4 {
@@ -319,11 +319,11 @@
         }
 
         .transaction-amount.receita {
-            color: #F44336;
+            color: #FFC107;
         }
 
         .transaction-amount.despesa {
-            color: #FFC107;
+            color: #F44336;
         }
 
         .btn-delete {
@@ -434,34 +434,27 @@
             .header h1 {
                 font-size: 1.8em;
             }
-
             .content {
                 padding: 15px;
             }
-
             .form-grid {
                 grid-template-columns: 1fr;
             }
-
             .transaction-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
-
             .transaction-info {
                 width: 100%;
                 margin-bottom: 10px;
             }
-
             .transaction-amount {
                 text-align: left;
                 margin-bottom: 10px;
             }
-
             .btn-delete {
                 align-self: flex-end;
             }
-
             .cards-grid {
                 grid-template-columns: 1fr;
             }
@@ -495,12 +488,12 @@
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-pane active">
                 <div class="cards-grid">
-                    <div class="card card-receita">
+                    <div class="card card-ganhei">
                         <div class="card-icon"><i class="fas fa-arrow-up"></i></div>
                         <div class="card-label">Ganhei</div>
                         <div class="card-value" id="total-receitas">R$ 0,00</div>
                     </div>
-                    <div class="card card-despesa">
+                    <div class="card card-gastei">
                         <div class="card-icon"><i class="fas fa-arrow-down"></i></div>
                         <div class="card-label">Gastei</div>
                         <div class="card-value" id="total-despesas">R$ 0,00</div>
@@ -556,11 +549,11 @@
                 <div class="report-container">
                     <h2 style="margin-bottom: 25px;"><i class="fas fa-file-alt"></i> Relatório Mensal</h2>
                     <div class="report-summary">
-                        <div class="card card-receita">
+                        <div class="card card-ganhei">
                             <div class="card-label">Ganhei</div>
                             <div class="card-value" id="report-receitas">R$ 0,00</div>
                         </div>
-                        <div class="card card-despesa">
+                        <div class="card card-gastei">
                             <div class="card-label">Gastei</div>
                             <div class="card-value" id="report-despesas">R$ 0,00</div>
                         </div>
@@ -584,7 +577,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT permanece igual ao seu original -->
     <script>
         // Data Storage
         let transacoes = [
@@ -655,15 +647,15 @@
         function calcularTotais() {
             const mesAtual = getMesAnoAtual();
             const transacoesMes = transacoes.filter(t => getMesAno(t.data) === mesAtual);
-            
+
             const totalReceitas = transacoesMes
                 .filter(t => t.tipo === 'receita')
                 .reduce((acc, t) => acc + t.valor, 0);
-            
+
             const totalDespesas = transacoesMes
                 .filter(t => t.tipo === 'despesa')
                 .reduce((acc, t) => acc + t.valor, 0);
-            
+
             const saldo = totalReceitas - totalDespesas;
 
             return { totalReceitas, totalDespesas, saldo };
@@ -693,10 +685,10 @@
         function renderizarTransacao(transacao) {
             const div = document.createElement('div');
             div.className = `transaction-item ${transacao.tipo}`;
-            
+
             const badgeText = transacao.tipo === 'receita' ? 'REC' : 'DES';
             const sinal = transacao.tipo === 'receita' ? '+' : '-';
-            
+
             div.innerHTML = `
                 <div class="transaction-info">
                     <div class="transaction-badge ${transacao.tipo}">${badgeText}</div>
@@ -710,7 +702,7 @@
                     <i class="fas fa-trash"></i>
                 </button>
             `;
-            
+
             return div;
         }
 
@@ -724,7 +716,7 @@
             // Recent transactions
             const recentContainer = document.getElementById('recent-transactions');
             recentContainer.innerHTML = '';
-            
+
             if (transacoesMes.length === 0) {
                 recentContainer.innerHTML = `
                     <div class="empty-state">
@@ -741,7 +733,7 @@
             // All transactions
             const allContainer = document.getElementById('all-transactions');
             allContainer.innerHTML = '';
-            
+
             if (transacoesMes.length === 0) {
                 allContainer.innerHTML = `
                     <div class="empty-state">
@@ -822,7 +814,7 @@
                                 <strong>${t.descricao}</strong><br>
                                 <small>${formatoDataDisplay(t.data)}</small>
                             </div>
-                            <div class="report-item-value" style="color: #F44336;">+${formatarMoeda(t.valor)}</div>
+                            <div class="report-item-value" style="color: #FFC107;">+${formatarMoeda(t.valor)}</div>
                         </div>
                     `;
                 });
@@ -845,7 +837,7 @@
                                 <strong>${t.descricao}</strong><br>
                                 <small>${formatoDataDisplay(t.data)}</small>
                             </div>
-                            <div class="report-item-value" style="color: #FFC107;">-${formatarMoeda(t.valor)}</div>
+                            <div class="report-item-value" style="color: #F44336;">-${formatarMoeda(t.valor)}</div>
                         </div>
                     `;
                 });
@@ -856,15 +848,15 @@
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const tabName = this.getAttribute('data-tab');
-                
+
                 document.querySelectorAll('.tab-pane').forEach(pane => {
                     pane.classList.remove('active');
                 });
-                
+
                 document.querySelectorAll('.tab-btn').forEach(b => {
                     b.classList.remove('active');
                 });
-                
+
                 document.getElementById(tabName).classList.add('active');
                 this.classList.add('active');
             });
